@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.attribute.DosFileAttributeView;
 import java.util.Scanner;
 
 public class Graphics extends JFrame implements ActionListener, javax.swing.event.ChangeListener {
@@ -117,22 +116,34 @@ public class Graphics extends JFrame implements ActionListener, javax.swing.even
             try (Scanner lector = new Scanner(new File(f.getPath()))) {
                 final String datos[] = lector.nextLine().split(";");
                 System.out.println(datos.length + datos[0]);
-                if (datos.length == 4) {
+                if (datos.length == 3) {
                     campo1.setText(datos[0]);
                     campo2.setText(datos[1]);
-                    resultado.setText(datos[2]);
-                    operacion.setText(datos[3]);
+                    operacion.setText(datos[2]);
+                    switch (operacion.getText()) {
+                        case "+":
+                            suma.setSelected(true);
+                            break;
+                        case "-":
+                            resta.setSelected(true);
+                            break;
+                        case "*":
+                            multi.setSelected(true);
+                            break;
+                        case "/":
+                           divi.setSelected(true);
+                    }
                 } else {
                     System.err.println("No se pudo leer el archivo");
                 }
-            } catch (final Exception err) {
+            } catch ( FileNotFoundException err) {
                 System.err.println("No se pudo abrir el archivo");
             }
         }
     }
 
     @Override
-    public void actionPerformed(final ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         double res = 0;
         double num1 = 0;
         double num2 = 0;
@@ -222,7 +233,7 @@ public class Graphics extends JFrame implements ActionListener, javax.swing.even
             PrintWriter pw = null;
             try {
                 pw = new PrintWriter(new FileWriter(f.getPath(), false));
-                pw.print(campo1.getText() + ";" + campo2.getText() + ";" + resultado.getText() + ";"
+                pw.print(campo1.getText() + ";" + campo2.getText() + ";" 
                         + operacion.getText());
             } catch (IOException err) {
                 System.err.println("No se pudo guardar");
